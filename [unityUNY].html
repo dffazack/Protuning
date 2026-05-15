@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protuning - Dashboard Analitik</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; margin: 0; padding: 30px; }
+        .header-bar { display: flex; gap: 10px; margin-bottom: 24px; }
+        .header-bar input { flex: 1; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+        .header-bar button { padding: 12px 24px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .header-bar button:hover { background: #1d4ed8; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; color: #111827; font-size: 16px; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px; margin-bottom: 16px; }
+        
+        /* Donut Chart CSS (Persentase Rendah) */
+        .chart-container { display: flex; justify-content: center; align-items: center; margin: 20px 0; }
+        .donut { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(#ef4444 35%, #e5e7eb 0); display: flex; align-items: center; justify-content: center; position: relative; }
+        .donut::before { content: ""; width: 110px; height: 110px; background: #fff; border-radius: 50%; position: absolute; }
+        .donut-text { position: relative; font-size: 28px; font-weight: bold; color: #ef4444; }
+        .match-status { text-align: center; color: #6b7280; font-size: 14px; line-height: 1.5; }
+        .status-alert { color: #ef4444; font-weight: bold; display: block; margin-bottom: 4px; }
+
+        /* Progress Bar & Peta Persaingan */
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #4b5563; }
+        .progress-bar { width: 100%; background: #e5e7eb; height: 8px; border-radius: 4px; margin-bottom: 20px; }
+        .progress-fill.competitor { background: #3b82f6; width: 75%; height: 100%; border-radius: 4px; }
+        .progress-fill.deadline { background: #ef4444; width: 90%; height: 100%; border-radius: 4px; }
+
+        /* To-Do List & Materi Belajar */
+        .todo-item { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid #f3f4f6; }
+        .todo-item:last-child { border-bottom: none; padding-bottom: 0; }
+        
+        .checkbox-wrapper { padding-top: 2px; }
+        .todo-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #10b981; }
+        
+        .todo-content { flex: 1; }
+        .badge { display: inline-block; background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge.urgent { background: #fee2e2; color: #dc2626; }
+        .badge.medium { background: #fef3c7; color: #d97706; }
+        
+        .todo-content strong { display: block; font-size: 15px; color: #1f2937; margin-bottom: 4px; }
+        .todo-content span { display: block; font-size: 13px; color: #6b7280; margin-bottom: 8px; line-height: 1.4; }
+        .resource-link { display: inline-flex; align-items: center; color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 12px; background: #eff6ff; border-radius: 6px; transition: background 0.2s; }
+        .resource-link:hover { background: #dbeafe; }
+        
+        /* Efek saat checkbox dicentang (Opsional visualisasi statis) */
+        .todo-item:has(.todo-checkbox:checked) .todo-content strong { text-decoration: line-through; color: #9ca3af; }
+        .todo-item:has(.todo-checkbox:checked) .todo-content span { color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <input type="text" value="https://www.linkedin.com/jobs/view/backend-developer-pt-teknologi-nusantara" readonly>
+        <button>Analisis Ulang</button>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="grid-left">
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Persentase Kelulusan (Match Rate)</h3>
+                <div class="chart-container">
+                    <div class="donut">
+                        <span class="donut-text">35%</span>
+                    </div>
+                </div>
+                <div class="match-status">
+                    <span class="status-alert">Peluang Kelulusan Rendah</span>
+                    Profil Anda memiliki kesenjangan keterampilan (*skill gap*) yang signifikan dengan spesifikasi industri ini.
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Peta Persaingan</h3>
+                <div class="stat-row"><span>Kandidat Memenuhi Syarat</span> <strong>75%</strong></div>
+                <div class="progress-bar"><div class="progress-fill competitor"></div></div>
+                
+                <div class="stat-row"><span>Sisa Waktu Penutupan (DL)</span> <strong>2 Hari</strong></div>
+                <div class="progress-bar"><div class="progress-fill deadline"></div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Rencana Aksi & Modul Pembelajaran Adaptif</h3>
+            
+            <div class="todo-item">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="todo-checkbox">
+                </div>
+                <div class="todo-content">
+                    <div class="badge urgent">Missing Core Skill</div>
+                    <strong>1. Pemahaman Arsitektur Microservices</strong>
+                    <span>Rekruter mewajibkan pemahaman Microservices. Pengalaman Anda saat ini hanya mencakup arsitektur Monolithic.</span>
+                    <a href="#" class="resource-link">Tonton Modul: Pengantar Microservices dengan Node.js &rarr;</a>
+                </div>
+            </div>
+
+            <div class="todo-item">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="todo-checkbox">
+                </div>
+                <div class="todo-content">
+                    <div class="badge urgent">Missing Core Skill</div>
+                    <strong>2. Konsep CI/CD (Docker & GitHub Actions)</strong>
+                    <span>Diperlukan kemampuan untuk melakukan *deployment* otomatis. Anda belum mencantumkan keahlian DevOps dasar ini.</span>
+                    <a href="#" class="resource-link">Baca Modul: Panduan Praktis CI/CD untuk Pemula &rarr;</a>
+                </div>
+            </div>
+
+            <div class="todo-item">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="todo-checkbox">
+                </div>
+                <div class="todo-content">
+                    <div class="badge medium">Needs Improvement</div>
+                    <strong>3. Unit Testing & Test-Driven Development (TDD)</strong>
+                    <span>Perusahaan ini sangat berfokus pada kualitas kode. Pelajari cara mengimplementasikan Jest atau Mocha pada *backend* Anda.</span>
+                    <a href="#" class="resource-link">Kerjakan Latihan: Implementasi Jest pada Express API &rarr;</a>
+                </div>
+            </div>
+            
+            <div class="todo-item">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="todo-checkbox">
+                </div>
+                <div class="todo-content">
+                    <div class="badge medium">Resume Action</div>
+                    <strong>4. Perbarui Portofolio Proyek RESTful API</strong>
+                    <span>Setelah menguasai materi di atas, perbarui GitHub Anda dengan proyek yang menerapkan CI/CD dan Unit Testing, lalu perbarui tautannya di profil Anda.</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
